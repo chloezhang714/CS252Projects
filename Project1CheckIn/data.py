@@ -4,80 +4,96 @@ Chloe Zhang
 CS 251 Data Analysis and Visualization
 Spring 2023
 '''
+import csv
 
+import numpy as np
 
 class Data:
     def __init__(self, filepath=None, headers=None, data=None, header2col=None):
-        '''Data object constructor
+        self = self
+        filepath = filepath
+        header = headers
+        data = data
+        header2col = header2col
+        if filepath != None: 
+            self.read(filepath)
+        # Data object constructor
 
-        Parameters:
-        -----------
-        filepath: str or None. Path to data .csv file
-        headers: Python list of strings or None. List of strings that explain the name of each
-            column of data.
-        data: ndarray or None. shape=(N, M).
-            N is the number of data samples (rows) in the dataset and M is the number of variables
-            (cols) in the dataset.
-            2D numpy array of the dataset’s values, all formatted as floats.
-            NOTE: In Week 1, don't worry working with ndarrays yet. Assume it will be passed in
-                  as None for now.
-        header2col: Python dictionary or None.
-                Maps header (var str name) to column index (int).
-                Example: "sepal_length" -> 0
+        # Parameters:
+        # -----------
+        # filepath: str or None. Path to data .csv file
+        # headers: Python list of strings or None. List of strings that explain the name of each
+        #     column of data.
+        # data: ndarray or None. shape=(N, M).
+        #     N is the number of data samples (rows) in the dataset and M is the number of variables
+        #     (cols) in the dataset.
+        #     2D numpy array of the dataset’s values, all formatted as floats.
+        #     NOTE: In Week 1, don't worry working with ndarrays yet. Assume it will be passed in
+        #           as None for now.
+        # header2col: Python dictionary or None.
+        #         Maps header (var str name) to column index (int).
+        #         Example: "sepal_length" -> 0
 
-        TODO:
-        - Declare/initialize the following instance variables:
-            - filepath
-            - headers
-            - data
-            - header2col
-            - Any others you find helpful in your implementation
-        - If `filepath` isn't None, call the `read` method.
-        '''
+        # TODO:
+        # - Declare/initialize the following instance variables:
+        #     - filepath
+        #     - headers
+        #     - data
+        #     - header2col
+        #     - Any others you find helpful in your implementation
+        # - If `filepath` isn't None, call the `read` method.
+        
         pass
 
     def read(self, filepath):
-        '''Read in the .csv file `filepath` in 2D tabular format. Convert to numpy ndarray called
-        `self.data` at the end (think of this as 2D array or table).
+        with open(filepath, newline='') as csvfile:
+            reader = csv.reader(csvfile, quoting=csv.QUOTE_NONNUMERIC)
+            self.headers = next(reader)
+            self.header2col = next(reader)
+            for row in reader:
+                self.data.add(row)
+        self.data = np.array(self.data)
+        # '''Read in the .csv file `filepath` in 2D tabular format. Convert to numpy ndarray called
+        # `self.data` at the end (think of this as 2D array or table).
 
-        Format of `self.data`:
-            Rows should correspond to i-th data sample.
-            Cols should correspond to j-th variable / feature.
+        # Format of `self.data`:
+        #     Rows should correspond to i-th data sample.
+        #     Cols should correspond to j-th variable / feature.
 
-        Parameters:
-        -----------
-        filepath: str or None. Path to data .csv file
+        # Parameters:
+        # -----------
+        # filepath: str or None. Path to data .csv file
 
-        Returns:
-        -----------
-        None. (No return value).
-            NOTE: In the future, the Returns section will be omitted from docstrings if
-            there should be nothing returned
+        # Returns:
+        # -----------
+        # None. (No return value).
+        #     NOTE: In the future, the Returns section will be omitted from docstrings if
+        #     there should be nothing returned
 
-        TODO:
-        - Read in the .csv file `filepath` to set `self.data`. Parse the file to only store
-        numeric columns of data in a 2D tabular format (ignore non-numeric ones). Make sure
-        everything that you add is a float.
-        - Represent `self.data` (after parsing your CSV file) as an numpy ndarray. To do this:
-            - At the top of this file write: import numpy as np
-            - Add this code before this method ends: self.data = np.array(self.data)
-        - Be sure to fill in the fields: `self.headers`, `self.data`, `self.header2col`.
+        # TODO:
+        # - Read in the .csv file `filepath` to set `self.data`. Parse the file to only store
+        # numeric columns of data in a 2D tabular format (ignore non-numeric ones). Make sure
+        # everything that you add is a float.
+        # - Represent `self.data` (after parsing your CSV file) as an numpy ndarray. To do this:
+        #     - At the top of this file write: import numpy as np
+        #     - Add this code before this method ends: self.data = np.array(self.data)
+        # - Be sure to fill in the fields: `self.headers`, `self.data`, `self.header2col`.
 
-        NOTE: You may wish to leverage Python's built-in csv module. Check out the documentation here:
-        https://docs.python.org/3/library/csv.html
+        # NOTE: You may wish to leverage Python's built-in csv module. Check out the documentation here:
+        # https://docs.python.org/3/library/csv.html
 
-        NOTE: In any CS251 project, you are welcome to create as many helper methods as you'd like.
-        The crucial thing is to make sure that the provided method signatures work as advertised.
+        # NOTE: In any CS251 project, you are welcome to create as many helper methods as you'd like.
+        # The crucial thing is to make sure that the provided method signatures work as advertised.
 
-        NOTE: You should only use the basic Python library to do your parsing.
-        (i.e. no Numpy or imports other than csv).
-        Points will be taken off otherwise.
+        # NOTE: You should only use the basic Python library to do your parsing.
+        # (i.e. no Numpy or imports other than csv).
+        # Points will be taken off otherwise.
 
-        TIPS:
-        - If you're unsure of the data format, open up one of the provided CSV files in a text editor
-        or check the project website for some guidelines.
-        - Check out the test scripts for the desired outputs.
-        '''
+        # TIPS:
+        # - If you're unsure of the data format, open up one of the provided CSV files in a text editor
+        # or check the project website for some guidelines.
+        # - Check out the test scripts for the desired outputs.
+        # '''
         pass
 
     def __str__(self):
@@ -95,12 +111,13 @@ class Data:
         pass
 
     def get_headers(self):
-        '''Get method for headers
+        return self.headers
+        # '''Get method for headers
 
-        Returns:
-        -----------
-        Python list of str.
-        '''
+        # Returns:
+        # -----------
+        # Python list of str.
+        # '''
         pass
 
     def get_mappings(self):
@@ -167,6 +184,7 @@ class Data:
         pass
 
     def head(self):
+        return self.data[0:5, :]
         '''Return the 1st five data samples (all variables)
 
         (Week 2)
