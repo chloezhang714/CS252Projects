@@ -12,7 +12,7 @@ class Data:
     def __init__(self, filepath=None, headers=None, data=None, header2col=None):
         self = self
         filepath = filepath
-        header = headers
+        headers = headers
         data = data
         header2col = header2col
         if filepath != None: 
@@ -47,12 +47,18 @@ class Data:
 
     def read(self, filepath):
         with open(filepath, newline='') as csvfile:
-            reader = csv.reader(csvfile, quoting=csv.QUOTE_NONNUMERIC)
+            reader = csv.reader(csvfile)
             self.headers = next(reader)
-            self.header2col = next(reader)
+            types = next(reader)
+            header2col = {}
+            for i, j in enumerate(self.headers):
+                header2col[j] = i
+            print('headers header2col success')
+            reader = csv.reader(csvfile)
             for row in reader:
-                self.data.add(row)
+                self.data.add(row.pop)
         self.data = np.array(self.data)
+        #enumerate
         # '''Read in the .csv file `filepath` in 2D tabular format. Convert to numpy ndarray called
         # `self.data` at the end (think of this as 2D array or table).
 
@@ -97,18 +103,20 @@ class Data:
         pass
 
     def __str__(self):
-        '''toString method
+        tostr = "-------------------------------/n" + self.filepath + +"/n Headers:/n" + '   '.join(self.headers) + "/n -------------------------------/n" + "Showing first 5/" +self.get_num_samples+" rows./n" + self.head()
+        
+        # '''toString method
 
-        (For those who don't know, __str__ works like toString in Java...In this case, it's what's
-        called to determine what gets shown when a `Data` object is printed.)
+        # (For those who don't know, __str__ works like toString in Java...In this case, it's what's
+        # called to determine what gets shown when a `Data` object is printed.)
 
-        Returns:
-        -----------
-        str. A nicely formatted string representation of the data in this Data object.
-            Only show, at most, the 1st 5 rows of data
-            See the test code for an example output.
-        '''
-        pass
+        # Returns:
+        # -----------
+        # str. A nicely formatted string representation of the data in this Data object.
+        #     Only show, at most, the 1st 5 rows of data
+        #     See the test code for an example output.
+        # '''
+        # pass
 
     def get_headers(self):
         return self.headers
@@ -121,42 +129,52 @@ class Data:
         pass
 
     def get_mappings(self):
-        '''Get method for mapping between variable name and column index
+        mapdict = {}
+        for i, j in enumerate(self.headers):
+            mapdict[j] = i
+        return(mapdict)
+        # '''Get method for mapping between variable name and column index
 
-        Returns:
-        -----------
-        Python dictionary. str -> int
-        '''
-        pass
+        # Returns:
+        # -----------
+        # Python dictionary. str -> int
+        # '''
+        # pass
 
     def get_num_dims(self):
-        '''Get method for number of dimensions in each data sample
+        return(len(self.headers)-1)
+        #number of column?? does species count? no ; size/shape of headers
+        # '''Get method for number of dimensions in each data sample
 
-        Returns:
-        -----------
-        int. Number of dimensions in each data sample. Same thing as number of variables.
-        '''
-        pass
+        # Returns:
+        # -----------
+        # int. Number of dimensions in each data sample. Same thing as number of variables.
+        # '''
+        # pass
 
     def get_num_samples(self):
-        '''Get method for number of data points (samples) in the dataset
+        return(np.shape(self.data)[0])
+        # '''Get method for number of data points (samples) in the dataset
 
-        Returns:
-        -----------
-        int. Number of data samples in dataset.
-        '''
-        pass
+        # Returns:
+        # -----------
+        # int. Number of data samples in dataset.
+        # '''
+        # pass
 
     def get_sample(self, rowInd):
-        '''Gets the data sample at index `rowInd` (the `rowInd`-th sample)
+        return self.data[rowInd-1,:]
+        # '''Gets the data sample at index `rowInd` (the `rowInd`-th sample)
 
-        Returns:
-        -----------
-        ndarray. shape=(num_vars,) The data sample at index `rowInd`
-        '''
-        pass
+        # Returns:
+        # -----------
+        # ndarray. shape=(num_vars,) The data sample at index `rowInd`
+        # '''
+        # pass
 
     def get_header_indices(self, headers):
+        
+        return rtn
         '''Gets the variable (column) indices of the str variable names in `headers`.
 
         Parameters:
@@ -171,52 +189,63 @@ class Data:
         pass
 
     def get_all_data(self):
-        '''Gets a copy of the entire dataset
+        return np.copy(self.data)
+        # '''Gets a copy of the entire dataset
 
-        (Week 2)
+        # (Week 2)
 
-        Returns:
-        -----------
-        ndarray. shape=(num_data_samps, num_vars). A copy of the entire dataset.
-            NOTE: This should be a COPY, not the data stored here itself.
-            This can be accomplished with numpy's copy function.
-        '''
-        pass
+        # Returns:
+        # -----------
+        # ndarray. shape=(num_data_samps, num_vars). A copy of the entire dataset.
+        #     NOTE: This should be a COPY, not the data stored here itself.
+        #     This can be accomplished with numpy's copy function.
+        # '''
+        # pass
 
     def head(self):
         return self.data[0:5, :]
-        '''Return the 1st five data samples (all variables)
+        # '''Return the 1st five data samples (all variables)
 
-        (Week 2)
+        # (Week 2)
 
-        Returns:
-        -----------
-        ndarray. shape=(5, num_vars). 1st five data samples.
-        '''
-        pass
+        # Returns:
+        # -----------
+        # ndarray. shape=(5, num_vars). 1st five data samples.
+        # '''
+        # pass
 
     def tail(self):
-        '''Return the last five data samples (all variables)
+        return self.data[-5, :]
+        # '''Return the last five data samples (all variables)
 
-        (Week 2)
+        # (Week 2)
 
-        Returns:
-        -----------
-        ndarray. shape=(5, num_vars). Last five data samples.
-        '''
-        pass
-
+        # Returns:
+        # -----------
+        # ndarray. shape=(5, num_vars). Last five data samples.
+        # '''
+        # pass
+        
+        
     def limit_samples(self, start_row, end_row):
-        '''Update the data so that this `Data` object only stores samples in the contiguous range:
-            `start_row` (inclusive), end_row (exclusive)
-        Samples outside the specified range are no longer stored.
+       #?  start_row start from 0 or 1? rn it's 1
+        self.data = self.data[(start_row - 1):(end_row - 2)]
+        # '''Update the data so that this `Data` object only stores samples in the contiguous range:
+        #     `start_row` (inclusive), end_row (exclusive)
+        # Samples outside the specified range are no longer stored.
 
-        (Week 2)
+        # (Week 2)
 
-        '''
-        pass
+        # '''
+        # pass
 
     def select_data(self, headers, rows=[]):
+        col = []
+        for item in headers:
+            #print(np.where(self.headers == item)[0])
+            #need help
+            col = col+ np.where(self.headers == item)[0]
+        return self.data[rows,col]
         '''Return data samples corresponding to the variable names in `headers`.
         If `rows` is empty, return all samples, otherwise return samples at the indices specified
         by the `rows` list.
