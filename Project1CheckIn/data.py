@@ -50,9 +50,9 @@ class Data:
             reader = csv.reader(csvfile)
             self.headers = next(reader)
             types = next(reader)
-            header2col = {}
+            self.header2col = {}
             for i, j in enumerate(self.headers):
-                header2col[j] = i
+                self.header2col[j] = i  
             print('headers header2col success')
             reader = csv.reader(csvfile)
             for row in reader:
@@ -173,20 +173,22 @@ class Data:
         # pass
 
     def get_header_indices(self, headers):
+        rtn = [self.header2col.get(x) for x in headers if self.header2col.get(x) != None]
+        print (rtn)
         
         return rtn
-        '''Gets the variable (column) indices of the str variable names in `headers`.
+        # '''Gets the variable (column) indices of the str variable names in `headers`.
 
-        Parameters:
-        -----------
-        headers: Python list of str. Header names to take from self.data
+        # Parameters:
+        # -----------
+        # headers: Python list of str. Header names to take from self.data
 
-        Returns:
-        -----------
-        Python list of nonnegative ints. shape=len(headers). The indices of the headers in `headers`
-            list.
-        '''
-        pass
+        # Returns:
+        # -----------
+        # Python list of nonnegative ints. shape=len(headers). The indices of the headers in `headers`
+        #     list.
+        # '''
+        # pass
 
     def get_all_data(self):
         return np.copy(self.data)
@@ -240,34 +242,30 @@ class Data:
         # pass
 
     def select_data(self, headers, rows=[]):
-        col = []
-        for item in headers:
-            #print(np.where(self.headers == item)[0])
-            #need help
-            col = col+ np.where(self.headers == item)[0]
+        col = [self.header2col.get(x) for x in headers if self.header2col.get(x) != None]
         return self.data[rows,col]
-        '''Return data samples corresponding to the variable names in `headers`.
-        If `rows` is empty, return all samples, otherwise return samples at the indices specified
-        by the `rows` list.
+        # '''Return data samples corresponding to the variable names in `headers`.
+        # If `rows` is empty, return all samples, otherwise return samples at the indices specified
+        # by the `rows` list.
 
-        (Week 2)
+        # (Week 2)
 
-        For example, if self.headers = ['a', 'b', 'c'] and we pass in header = 'b', we return
-        column #2 of self.data. If rows is not [] (say =[0, 2, 5]), then we do the same thing,
-        but only return rows 0, 2, and 5 of column #2.
+        # For example, if self.headers = ['a', 'b', 'c'] and we pass in header = 'b', we return
+        # column #2 of self.data. If rows is not [] (say =[0, 2, 5]), then we do the same thing,
+        # but only return rows 0, 2, and 5 of column #2.
 
-        Parameters:
-        -----------
-            headers: Python list of str. Header names to take from self.data
-            rows: Python list of int. Indices of subset of data samples to select.
-                Empty list [] means take all rows
+        # Parameters:
+        # -----------
+        #     headers: Python list of str. Header names to take from self.data
+        #     rows: Python list of int. Indices of subset of data samples to select.
+        #         Empty list [] means take all rows
 
-        Returns:
-        -----------
-        ndarray. shape=(num_data_samps, len(headers)) if rows=[]
-                 shape=(len(rows), len(headers)) otherwise
-            Subset of data from the variables `headers` that have row indices `rows`.
+        # Returns:
+        # -----------
+        # ndarray. shape=(num_data_samps, len(headers)) if rows=[]
+        #          shape=(len(rows), len(headers)) otherwise
+        #     Subset of data from the variables `headers` that have row indices `rows`.
 
-        Hint: For selecting a subset of rows from the data ndarray, check out np.ix_
-        '''
-        pass
+        # Hint: For selecting a subset of rows from the data ndarray, check out np.ix_
+        # '''
+        # pass
