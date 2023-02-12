@@ -9,14 +9,16 @@ import csv
 import numpy as np
 
 class Data:
-    def __init__(self, filepath=None, headers=None, data=None, header2col=None):
-        self = self
-        filepath = filepath
-        headers = headers
-        data = data
-        header2col = header2col
+    def __init__(self, filepath = None, headers = None, data = None, header2col = None):
+        self.filepath = filepath
+        self.headers = headers
+        self.data = data
+        self.header2col = header2col
         if filepath != None: 
             self.read(filepath)
+        else: 
+            print("Filepath invalid")
+        pass
         # Data object constructor
 
         # Parameters:
@@ -46,18 +48,27 @@ class Data:
         pass
 
     def read(self, filepath):
+        self.filepath = filepath
         with open(filepath, newline='') as csvfile:
+            self.header2col = {}
             reader = csv.reader(csvfile)
             self.headers = next(reader)
+            self.headers.pop(-1)
             types = next(reader)
-            self.header2col = {}
             for i, j in enumerate(self.headers):
                 self.header2col[j] = i  
-            print('headers header2col success')
+            #print(self.headers)
+            #print(self.header2col)
+            #print('headers header2col success')
             reader = csv.reader(csvfile)
+            self.data = []
             for row in reader:
-                self.data.add(row.pop)
+                row.pop(-1)
+                print(row)
+                self.data.append(row)
+                
         self.data = np.array(self.data)
+        print(self.data)
         #enumerate
         # '''Read in the .csv file `filepath` in 2D tabular format. Convert to numpy ndarray called
         # `self.data` at the end (think of this as 2D array or table).
@@ -103,8 +114,8 @@ class Data:
         pass
 
     def __str__(self):
-        tostr = "-------------------------------/n" + self.filepath + +"/n Headers:/n" + '   '.join(self.headers) + "/n -------------------------------/n" + "Showing first 5/" +self.get_num_samples+" rows./n" + self.head()
-        
+        tostr = "-------------------------------/n" + self.filepath +"/n Headers:/n" + '   '.join(self.headers) + "/n -------------------------------/n" + "Showing first 5/" + self.get_num_samples+ " rows./n" + self.headers
+        return tostr
         # '''toString method
 
         # (For those who don't know, __str__ works like toString in Java...In this case, it's what's
