@@ -1,173 +1,184 @@
 '''analysis.py
 Run statistical analyses and plot Numpy ndarray data
-YOUR NAME HERE
-CS 25X Data Analysis Visualization, Spring 2022
+Chloe Zhang
+CS 251 Data Analysis Visualization, Spring 2022
 '''
 import numpy as np
 import matplotlib.pyplot as plt
+import math
 
 
 class Analysis:
     def __init__(self, data):
-        '''
+        # '''
 
-        Parameters:
-        -----------
-        data: Data object. Contains all data samples and variables in a dataset.
-        '''
+        # Parameters:
+        # -----------
+        # data: Data object. Contains all data samples and variables in a dataset.
+        # '''
         self.data = data
 
         # Make plot font sizes legible
         plt.rcParams.update({'font.size': 18})
 
     def set_data(self, data):
-        '''Method that re-assigns the instance variable `data` with the parameter.
-        Convenience method to change the data used in an analysis without having to create a new
-        Analysis object.
+        self.data = data
+        # '''Method that re-assigns the instance variable `data` with the parameter.
+        # Convenience method to change the data used in an analysis without having to create a new
+        # Analysis object.
 
-        Parameters:
-        -----------
-        data: Data object. Contains all data samples and variables in a dataset.
-        '''
-        pass
+        # Parameters:
+        # -----------
+        # data: Data object. Contains all data samples and variables in a dataset.
+        # '''
+        # pass
 
     def min(self, headers, rows=[]):
-        '''Computes the minimum of each variable in `headers` in the data object.
-        Possibly only in a subset of data samples (`rows`) if `rows` is not empty.
-        (i.e. the minimum value in each of the selected columns)
+        return np.min(self.data.select_data(self,headers,rows))
+        # '''Computes the minimum of each variable in `headers` in the data object.
+        # Possibly only in a subset of data samples (`rows`) if `rows` is not empty.
+        # (i.e. the minimum value in each of the selected columns)
 
-        Parameters:
-        -----------
-        headers: Python list of str.
-            One str per header variable name in data
-        rows: Python list of int.
-            Indices of data samples to restrict computation of min over, or over all indices
-            if rows=[]
+        # Parameters:
+        # -----------
+        # headers: Python list of str.
+        #     One str per header variable name in data
+        # rows: Python list of int.
+        #     Indices of data samples to restrict computation of min over, or over all indices
+        #     if rows=[]
 
-        Returns
-        -----------
-        mins: ndarray. shape=(len(headers),)
-            Minimum values for each of the selected header variables
+        # Returns
+        # -----------
+        # mins: ndarray. shape=(len(headers),)
+        #     Minimum values for each of the selected header variables
 
-        NOTE: Loops are forbidden!
-        '''
-        pass
+        # NOTE: Loops are forbidden!
+        # '''
+        # pass
 
     def max(self, headers, rows=[]):
-        '''Computes the maximum of each variable in `headers` in the data object.
-        Possibly only in a subset of data samples (`rows`) if `rows` is not empty.
+        return np.max(self.data.select_data(self,headers,rows))
 
-        Parameters:
-        -----------
-        headers: Python list of str.
-            One str per header variable name in data
-        rows: Python list of int.
-            Indices of data samples to restrict computation of max over, or over all indices
-            if rows=[]
+        # '''Computes the maximum of each variable in `headers` in the data object.
+        # Possibly only in a subset of data samples (`rows`) if `rows` is not empty.
 
-        Returns
-        -----------
-        maxs: ndarray. shape=(len(headers),)
-            Maximum values for each of the selected header variables
+        # Parameters:
+        # -----------
+        # headers: Python list of str.
+        #     One str per header variable name in data
+        # rows: Python list of int.
+        #     Indices of data samples to restrict computation of max over, or over all indices
+        #     if rows=[]
 
-        NOTE: Loops are forbidden!
-        '''
-        pass
+        # Returns
+        # -----------
+        # maxs: ndarray. shape=(len(headers),)
+        #     Maximum values for each of the selected header variables
+
+        # NOTE: Loops are forbidden!
+        # '''
+        # pass
 
     def range(self, headers, rows=[]):
-        '''Computes the range [min, max] for each variable in `headers` in the data object.
-        Possibly only in a subset of data samples (`rows`) if `rows` is not empty.
+        return [self.min(headers, rows), self.max(headers, rows)]
+        # '''Computes the range [min, max] for each variable in `headers` in the data object.
+        # Possibly only in a subset of data samples (`rows`) if `rows` is not empty.
 
-        Parameters:
-        -----------
-        headers: Python list of str.
-            One str per header variable name in data
-        rows: Python list of int.
-            Indices of data samples to restrict computation of min/max over, or over all indices
-            if rows=[]
+        # Parameters:
+        # -----------
+        # headers: Python list of str.
+        #     One str per header variable name in data
+        # rows: Python list of int.
+        #     Indices of data samples to restrict computation of min/max over, or over all indices
+        #     if rows=[]
 
-        Returns
-        -----------
-        mins: ndarray. shape=(len(headers),)
-            Minimum values for each of the selected header variables
-        maxes: ndarray. shape=(len(headers),)
-            Maximum values for each of the selected header variables
+        # Returns
+        # -----------
+        # mins: ndarray. shape=(len(headers),)
+        #     Minimum values for each of the selected header variables
+        # maxes: ndarray. shape=(len(headers),)
+        #     Maximum values for each of the selected header variables
 
-        NOTE: Loops are forbidden!
-        '''
-        pass
+        # NOTE: Loops are forbidden!
+        # '''
+        # pass
 
     def mean(self, headers, rows=[]):
-        '''Computes the mean for each variable in `headers` in the data object.
-        Possibly only in a subset of data samples (`rows`).
+        data = self.data.select_data(self,headers,rows)
+        return (sum(data)/data.size())
+        # '''Computes the mean for each variable in `headers` in the data object.
+        # Possibly only in a subset of data samples (`rows`).
 
-        Parameters:
-        -----------
-        headers: Python list of str.
-            One str per header variable name in data
-        rows: Python list of int.
-            Indices of data samples to restrict computation of mean over, or over all indices
-            if rows=[]
+        # Parameters:
+        # -----------
+        # headers: Python list of str.
+        #     One str per header variable name in data
+        # rows: Python list of int.
+        #     Indices of data samples to restrict computation of mean over, or over all indices
+        #     if rows=[]
 
-        Returns
-        -----------
-        means: ndarray. shape=(len(headers),)
-            Mean values for each of the selected header variables
+        # Returns
+        # -----------
+        # means: ndarray. shape=(len(headers),)
+        #     Mean values for each of the selected header variables
 
-        NOTE: You CANNOT use np.mean here!
-        NOTE: Loops are forbidden!
-        '''
-        pass
+        # NOTE: You CANNOT use np.mean here!
+        # NOTE: Loops are forbidden!
+        # '''
+        # pass
 
     def var(self, headers, rows=[]):
-        '''Computes the variance for each variable in `headers` in the data object.
-        Possibly only in a subset of data samples (`rows`) if `rows` is not empty.
+        data = self.data.select_data(self,headers,rows)
+        return math.pow(data - self.mean(self,headers,rows))/(data.size-1)
+        # '''Computes the variance for each variable in `headers` in the data object.
+        # Possibly only in a subset of data samples (`rows`) if `rows` is not empty.
 
-        Parameters:
-        -----------
-        headers: Python list of str.
-            One str per header variable name in data
-        rows: Python list of int.
-            Indices of data samples to restrict computation of variance over, or over all indices
-            if rows=[]
+        # Parameters:
+        # -----------
+        # headers: Python list of str.
+        #     One str per header variable name in data
+        # rows: Python list of int.
+        #     Indices of data samples to restrict computation of variance over, or over all indices
+        #     if rows=[]
 
-        Returns
-        -----------
-        vars: ndarray. shape=(len(headers),)
-            Variance values for each of the selected header variables
+        # Returns
+        # -----------
+        # vars: ndarray. shape=(len(headers),)
+        #     Variance values for each of the selected header variables
 
-        NOTE: You CANNOT use np.var or np.mean here!
-        NOTE: Loops are forbidden!
-        '''
-        pass
+        # NOTE: You CANNOT use np.var or np.mean here!
+        # NOTE: Loops are forbidden!
+        # '''
+        # pass
 
     def std(self, headers, rows=[]):
-        '''Computes the standard deviation for each variable in `headers` in the data object.
-        Possibly only in a subset of data samples (`rows`) if `rows` is not empty.
+        return math.sqrt(self.var(self.data.select_data(self,headers,rows)))
+        # '''Computes the standard deviation for each variable in `headers` in the data object.
+        # Possibly only in a subset of data samples (`rows`) if `rows` is not empty.
 
-        Parameters:
-        -----------
-        headers: Python list of str.
-            One str per header variable name in data
-        rows: Python list of int.
-            Indices of data samples to restrict computation of standard deviation over,
-            or over all indices if rows=[]
+        # Parameters:
+        # -----------
+        # headers: Python list of str.
+        #     One str per header variable name in data
+        # rows: Python list of int.
+        #     Indices of data samples to restrict computation of standard deviation over,
+        #     or over all indices if rows=[]
 
-        Returns
-        -----------
-        vars: ndarray. shape=(len(headers),)
-            Standard deviation values for each of the selected header variables
+        # Returns
+        # -----------
+        # vars: ndarray. shape=(len(headers),)
+        #     Standard deviation values for each of the selected header variables
 
-        NOTE: You CANNOT use np.var, np.std, or np.mean here!
-        NOTE: Loops are forbidden!
-        '''
-        pass
+        # NOTE: You CANNOT use np.var, np.std, or np.mean here!
+        # NOTE: Loops are forbidden!
+        # '''
+        # pass
 
     def show(self):
-        '''Simple wrapper function for matplotlib's show function.
+        # '''Simple wrapper function for matplotlib's show function.
 
-        (Does not require modification)
-        '''
+        # (Does not require modification)
+        # '''
         plt.show()
 
     def scatter(self, ind_var, dep_var, title):

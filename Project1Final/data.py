@@ -51,24 +51,36 @@ class Data:
         self.filepath = filepath
         with open(filepath, newline='') as csvfile:
             self.header2col = {}
+            self.headers = []
             reader = csv.reader(csvfile)
-            self.headers = next(reader)
-            self.headers.pop(-1)
+            headers_t = next(reader)
+            #print(headers_t)
             types = next(reader)
+            for i,j in enumerate (types):
+                j = j.strip()
+                # print(i)
+                # print("#" + j + "#")
+                if j == 'numeric':
+                    self.headers.append(headers_t[i])      
             for i, j in enumerate(self.headers):
+                j = j.strip()
                 self.header2col[j] = i  
-            #print(self.headers)
-            #print(self.header2col)
-            #print('headers header2col success')
-            reader = csv.reader(csvfile)
+            # print(self.headers)
+            # print(self.header2col)
+            # print('headers header2col success')
+            reader = csv.reader(csvfile,delimiter = ',')
             self.data = []
             for row in reader:
-                row.pop(-1)
-                print(row)
-                self.data.append(row)
+                ro = []
+                for i in row:
+                    try:
+                        ro.append((float(i)))
+                    except:
+                        pass
+                self.data.append(ro)
                 
         self.data = np.array(self.data)
-        print(self.data)
+        #print(self.data)
         #enumerate
         # '''Read in the .csv file `filepath` in 2D tabular format. Convert to numpy ndarray called
         # `self.data` at the end (think of this as 2D array or table).
@@ -185,8 +197,7 @@ class Data:
 
     def get_header_indices(self, headers):
         rtn = [self.header2col.get(x) for x in headers if self.header2col.get(x) != None]
-        print (rtn)
-        
+        #print (rtn)
         return rtn
         # '''Gets the variable (column) indices of the str variable names in `headers`.
 
@@ -228,7 +239,11 @@ class Data:
         # pass
 
     def tail(self):
-        return self.data[-5, :]
+        len = self.get_num_samples()
+        if(len < 5):
+            return self.data[-len:,:]
+        else:
+            return self.data[-5:, :]
         # '''Return the last five data samples (all variables)
 
         # (Week 2)
@@ -242,7 +257,7 @@ class Data:
         
     def limit_samples(self, start_row, end_row):
        #?  start_row start from 0 or 1? rn it's 1
-        self.data = self.data[(start_row - 1):(end_row - 2)]
+        self.data = self.data[(start_row):(end_row)]
         # '''Update the data so that this `Data` object only stores samples in the contiguous range:
         #     `start_row` (inclusive), end_row (exclusive)
         # Samples outside the specified range are no longer stored.
@@ -252,15 +267,17 @@ class Data:
         # '''
         # pass
 
-    def select_data(self, headers, rows=[]):
-        col = [self.header2col.get(x) for x in headers if self.header2col.get(x) != None]
-        return self.data[rows,col]
+    def select_data(self, headers, rows = None):
+        col = self.get_header_indices(headers) 
+        if rows == None:
+            return self.data[:,col]
+        return self.data[np.ix_(rows,col)]
         # '''Return data samples corresponding to the variable names in `headers`.
         # If `rows` is empty, return all samples, otherwise return samples at the indices specified
         # by the `rows` list.
 
         # (Week 2)
-
+        # np.ix_ gets a mesh
         # For example, if self.headers = ['a', 'b', 'c'] and we pass in header = 'b', we return
         # column #2 of self.data. If rows is not [] (say =[0, 2, 5]), then we do the same thing,
         # but only return rows 0, 2, and 5 of column #2.
