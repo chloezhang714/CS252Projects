@@ -34,7 +34,8 @@ class Analysis:
         # pass
 
     def min(self, headers, rows=[]):
-        return np.min(self.data.select_data(self,headers,rows))
+        data = np.array(self.data.select_data(headers,rows))
+        return np.min(data,axis = 0)
         # '''Computes the minimum of each variable in `headers` in the data object.
         # Possibly only in a subset of data samples (`rows`) if `rows` is not empty.
         # (i.e. the minimum value in each of the selected columns)
@@ -57,8 +58,7 @@ class Analysis:
         # pass
 
     def max(self, headers, rows=[]):
-        return np.max(self.data.select_data(self,headers,rows))
-
+        return (self.data.select_data(headers,rows)).max(axis = 0)
         # '''Computes the maximum of each variable in `headers` in the data object.
         # Possibly only in a subset of data samples (`rows`) if `rows` is not empty.
 
@@ -104,8 +104,8 @@ class Analysis:
         # pass
 
     def mean(self, headers, rows=[]):
-        data = self.data.select_data(self,headers,rows)
-        return (sum(data)/data.size())
+        data = self.data.select_data(headers,rows)
+        return (sum(data)/data.shape[0])
         # '''Computes the mean for each variable in `headers` in the data object.
         # Possibly only in a subset of data samples (`rows`).
 
@@ -128,8 +128,15 @@ class Analysis:
         # pass
 
     def var(self, headers, rows=[]):
-        data = self.data.select_data(self,headers,rows)
-        return math.pow(data - self.mean(self,headers,rows))/(data.size-1)
+        data = self.data.select_data(headers,rows)
+        # print(data.shape)
+        # print(self.mean(headers,rows).shape)
+        diff = data-self.mean(headers,rows)
+        # print(diff)
+        sqr = diff * diff
+        # print(sqr)
+        # print(np.sum(sqr, axis = 0))
+        return np.sum(sqr, axis = 0) /(data.shape[0]-1)
         # '''Computes the variance for each variable in `headers` in the data object.
         # Possibly only in a subset of data samples (`rows`) if `rows` is not empty.
 
@@ -152,7 +159,7 @@ class Analysis:
         # pass
 
     def std(self, headers, rows=[]):
-        return math.sqrt(self.var(self.data.select_data(self,headers,rows)))
+        return np.sqrt(self.var(headers,rows))
         # '''Computes the standard deviation for each variable in `headers` in the data object.
         # Possibly only in a subset of data samples (`rows`) if `rows` is not empty.
 

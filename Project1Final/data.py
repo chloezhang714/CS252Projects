@@ -267,11 +267,12 @@ class Data:
         # '''
         # pass
 
-    def select_data(self, headers, rows = None):
+    def select_data(self, headers, rows = []):
         col = self.get_header_indices(headers) 
-        if rows == None:
+        if rows == []:
             return self.data[:,col]
-        return self.data[np.ix_(rows,col)]
+        else:
+            return self.data[np.ix_(rows,col)]
         # '''Return data samples corresponding to the variable names in `headers`.
         # If `rows` is empty, return all samples, otherwise return samples at the indices specified
         # by the `rows` list.
