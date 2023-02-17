@@ -188,11 +188,13 @@ class Analysis:
         # '''
         plt.show()
 
-    def scatter(self, ind_var, dep_var, title):
-        x = np.nparray(self.data.select_data(ind_var))
-        y = np.nparray(self.data.select_data(dep_var))
+    def scatter(self, ind_var, dep_var, title = ''):
+        x = self.data.select_data([ind_var])
+        y = self.data.select_data([dep_var])
         plt.scatter(x,y)
-        plt.set(xlabel=ind_var, ylabel=dep_var,title = title)
+        plt.title(title)
+        plt.xlabel(ind_var)
+        plt.ylabel(dep_var)
         return x,y
         # '''Creates a simple scatter plot with "x" variable in the dataset `ind_var` and
         # "y" variable in the dataset `dep_var`. Both `ind_var` and `dep_var` should be strings
@@ -218,16 +220,24 @@ class Analysis:
         # '''
         # pass
 
-    def pair_plot(self, data_vars, fig_sz=(12, 12), title=''):
+    def pair_plot(self, data_vars, fig_sz=(12, 12), title = 'Pair Plot'):
         dim = len(data_vars)
-        fig, axs = plt.subplots(dim,dim,fig_sz)
+        fig, axs = plt.subplots(dim,dim, figsize=fig_sz, sharex='none')
         for i in range(dim):
             for j in range(dim):
-                    axs[i, j].scatter(np.nparray[self.data.select_data(data_vars[i])],np.nparray[self.data.select_data(data_vars[j])], s=5)
+                    if j == 0:
+                        axs[i, j].set(ylabel=data_vars[i])
+                    if i == dim-1:
+                        axs[i, j].set(xlabel=data_vars[j])
+                    x = self.data.select_data([data_vars[i]])
+                    y = self.data.select_data([data_vars[j]])
+                    axs[i, j].scatter(x,y)
+                    axs[i, j].set_xticks([])
+                    axs[i, j].set_yticks([])
         fig.subplots_adjust(hspace = 0.5, wspace = 0.3)
-        plt.tight_layout()
-        plt.set(title = title)
-        #todo:set xy ticks label
+        fig.suptitle(title)
+        return (fig,axs)
+        #? are we hoping to share dimensions or no
         '''Create a pair plot: grid of scatter plots showing all combinations of variables in
         `data_vars` in the x and y axes.
 
