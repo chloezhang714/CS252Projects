@@ -189,31 +189,45 @@ class Analysis:
         plt.show()
 
     def scatter(self, ind_var, dep_var, title):
-        '''Creates a simple scatter plot with "x" variable in the dataset `ind_var` and
-        "y" variable in the dataset `dep_var`. Both `ind_var` and `dep_var` should be strings
-        in `self.headers`.
+        x = np.nparray(self.data.select_data(ind_var))
+        y = np.nparray(self.data.select_data(dep_var))
+        plt.scatter(x,y)
+        plt.set(xlabel=ind_var, ylabel=dep_var,title = title)
+        return x,y
+        # '''Creates a simple scatter plot with "x" variable in the dataset `ind_var` and
+        # "y" variable in the dataset `dep_var`. Both `ind_var` and `dep_var` should be strings
+        # in `self.headers`.
 
-        Parameters:
-        -----------
-        ind_var: str.
-            Name of variable that is plotted along the x axis
-        dep_var: str.
-            Name of variable that is plotted along the y axis
-        title: str.
-            Title of the scatter plot
+        # Parameters:
+        # -----------
+        # ind_var: str.
+        #     Name of variable that is plotted along the x axis
+        # dep_var: str.
+        #     Name of variable that is plotted along the y axis
+        # title: str.
+        #     Title of the scatter plot
 
-        Returns:
-        -----------
-        x. ndarray. shape=(num_data_samps,)
-            The x values that appear in the scatter plot
-        y. ndarray. shape=(num_data_samps,)
-            The y values that appear in the scatter plot
+        # Returns:
+        # -----------
+        # x. ndarray. shape=(num_data_samps,)
+        #     The x values that appear in the scatter plot
+        # y. ndarray. shape=(num_data_samps,)
+        #     The y values that appear in the scatter plot
 
-        NOTE: Do not call plt.show() here.
-        '''
-        pass
+        # NOTE: Do not call plt.show() here.
+        # '''
+        # pass
 
     def pair_plot(self, data_vars, fig_sz=(12, 12), title=''):
+        dim = len(data_vars)
+        fig, axs = plt.subplots(dim,dim,fig_sz)
+        for i in range(dim):
+            for j in range(dim):
+                    axs[i, j].scatter(np.nparray[self.data.select_data(data_vars[i])],np.nparray[self.data.select_data(data_vars[j])], s=5)
+        fig.subplots_adjust(hspace = 0.5, wspace = 0.3)
+        plt.tight_layout()
+        plt.set(title = title)
+        #todo:set xy ticks label
         '''Create a pair plot: grid of scatter plots showing all combinations of variables in
         `data_vars` in the x and y axes.
 
