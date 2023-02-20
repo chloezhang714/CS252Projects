@@ -13,7 +13,7 @@ class Data:
         self.filepath = filepath
         self.headers = headers
         self.data = data
-        self.header2col = header2col
+        self.header2l = header2col
         if filepath != None: 
             self.read(filepath)
         else: 
