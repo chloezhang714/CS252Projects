@@ -5,7 +5,6 @@ CS 251 Data Analysis Visualization, Spring 2022
 '''
 import numpy as np
 import matplotlib.pyplot as plt
-import math
 
 
 class Analysis:
@@ -237,35 +236,34 @@ class Analysis:
         fig.subplots_adjust(hspace = 0.5, wspace = 0.3)
         fig.suptitle(title)
         return (fig,axs)
-        #? are we hoping to share dimensions or no
-        '''Create a pair plot: grid of scatter plots showing all combinations of variables in
-        `data_vars` in the x and y axes.
+        # '''Create a pair plot: grid of scatter plots showing all combinations of variables in
+        # `data_vars` in the x and y axes.
 
-        Parameters:
-        -----------
-        data_vars: Python list of str.
-            Variables to place on either the x or y axis of the scatter plots
-        fig_sz: tuple of 2 ints.
-            The width and height of the figure of subplots. Pass as a paramter to plt.subplots.
-        title. str. Title for entire figure (not the individual subplots)
+        # Parameters:
+        # -----------
+        # data_vars: Python list of str.
+        #     Variables to place on either the x or y axis of the scatter plots
+        # fig_sz: tuple of 2 ints.
+        #     The width and height of the figure of subplots. Pass as a paramter to plt.subplots.
+        # title. str. Title for entire figure (not the individual subplots)
 
-        Returns:
-        -----------
-        fig. The matplotlib figure.
-            1st item returned by plt.subplots
-        axes. ndarray of AxesSubplot objects. shape=(len(data_vars), len(data_vars))
-            2nd item returned by plt.subplots
+        # Returns:
+        # -----------
+        # fig. The matplotlib figure.
+        #     1st item returned by plt.subplots
+        # axes. ndarray of AxesSubplot objects. shape=(len(data_vars), len(data_vars))
+        #     2nd item returned by plt.subplots
 
-        TODO:
-        - Make the len(data_vars) x len(data_vars) grid of scatterplots
-        - The y axis of the first column should be labeled with the appropriate variable being
-        plotted there.
-        - The x axis of the last row should be labeled with the appropriate variable being plotted
-        there.
-        - There should be no other axis or tick labels (it looks too cluttered otherwise!)
+        # TODO:
+        # - Make the len(data_vars) x len(data_vars) grid of scatterplots
+        # - The y axis of the first column should be labeled with the appropriate variable being
+        # plotted there.
+        # - The x axis of the last row should be labeled with the appropriate variable being plotted
+        # there.
+        # - There should be no other axis or tick labels (it looks too cluttered otherwise!)
 
-        Tip: Check out the sharex and sharey keyword arguments of plt.subplots.
-        Because variables may have different ranges, pair plot columns usually share the same
-        x axis and rows usually share the same y axis.
-        '''
-        pass
+        # Tip: Check out the sharex and sharey keyword arguments of plt.subplots.
+        # Because variables may have different ranges, pair plot columns usually share the same
+        # x axis and rows usually share the same y axis.
+        # '''
+        # pass

@@ -297,4 +297,3 @@ class Data:
 
         # Hint: For selecting a subset of rows from the data ndarray, check out np.ix_
         # '''
-        # pass
