@@ -12,7 +12,7 @@ import data
 
 class Transformation(analysis.Analysis):
 
-    def __init__(self, orig_dataset, data):
+    def __init__(self, orig_dataset, data = None):
         super().__init__(data)
         self.orig_dataset = orig_dataset
         # '''Constructor for a Transformation object
@@ -32,9 +32,15 @@ class Transformation(analysis.Analysis):
         # '''
         # pass
 
-    def project(self, headers):
-        self.data = data(headers = headers, data = self.dataset.select_data(headers))
+    def project(self, headers = None):
+        if headers == None:
+            self.data = data.Data(data = self.orig_dataset.get_all_data(), headers = self.orig_dataset.get_headers())
+        else:
+            projected_data = self.orig_dataset.select_data(headers)
+            self.data = data.Data(data = projected_data, headers = headers)
+        #print(self.data.get_all_data())
         
+        #modified the function a bit so that it could take no headers and that would mean keep all the data 
         # '''Project the original dataset onto the list of data variables specified by `headers`,
         # i.e. select a subset of the variables from the original dataset.
         # In other words, your goal is to populate the instance variable `self.data`.
@@ -59,7 +65,9 @@ class Transformation(analysis.Analysis):
         # pass
 
     def get_data_homogeneous(self):
-        homogenized_data = np.append(self.data, np.array([np.ones(self.data.shape[0], dtype=int)]).T, axis=1)
+        homogenized_data = self.data.get_all_data()
+        # print(self.data.get_num_samples())
+        homogenized_data = np.append(homogenized_data, np.array([np.ones(self.data.get_num_samples(), dtype=int)]).T, axis=1)
         return homogenized_data
         # '''Helper method to get a version of the projected data array with an added homogeneous
         # coordinate. Useful for homogeneous transformations.
@@ -77,11 +85,10 @@ class Transformation(analysis.Analysis):
         # pass
 
     def translation_matrix(self, magnitudes):
-        translateTransform = np.eye(self.data.shape[1]+1, dtype=float)
-        for i in range(self.data.shape[1]):
-            translateTransform[i, self.data.shape[0]] = magnitudes[i]
+        translateTransform = np.eye(self.data.get_num_dims()+2, dtype=float)
+        for i in range(self.data.get_num_dims()+1):
+             translateTransform[i, self.data.get_num_dims()+1] = magnitudes[i]
         return translateTransform
-        #print("translateTransform")
         # ''' Make an M-dimensional homogeneous transformation matrix for translation,
         # where M is the number of features in the projected dataset.
 
@@ -101,12 +108,11 @@ class Transformation(analysis.Analysis):
         # pass
 
     def scale_matrix(self, magnitudes):
-        scaleTransform = np.eye(data.shape[1]+1)
-        # divide by the global range
-        for i in range(self.data.shape[1]):
+        scaleTransform = np.eye(self.data.get_num_dims()+2, dtype=float)
+        for i in range(self.data.get_num_dims()+1):
             scaleTransform[i, i] = magnitudes[i]
         #print(scaleTransform)
-        return(scaleTransform)
+        return scaleTransform
         '''Make an M-dimensional homogeneous scaling matrix for scaling, where M is the number of
         variables in the projected dataset.
 
@@ -125,9 +131,12 @@ class Transformation(analysis.Analysis):
 
     def translate(self, magnitudes):
         translateTransform = self.translation_matrix(magnitudes = magnitudes)
-        data = (translateTransform @ self.get_data_homogeneous().T).T
-        data = np.delete(data, -1, axis = 1)
-        return data
+        #print(translateTransform)
+        dat = (translateTransform @ self.get_data_homogeneous().T).T
+        #print(dat)
+        dat = np.delete(dat, -1, axis = 1)
+        self.data = data.Data(data = dat, headers = self.data.get_headers())
+        return dat
         # '''Translates the variables `headers` in projected dataset in corresponding amounts specified
         # by `magnitudes`.
 
@@ -152,9 +161,11 @@ class Transformation(analysis.Analysis):
 
     def scale(self, magnitudes):
         scaleTransform = self.scale_matrix(magnitudes = magnitudes)
-        data = (scaleTransform @ self.get_data_homogeneous().T).T
-        data = np.delete(data, -1, axis = 1)
-        return data
+        #print(scaleTransform)
+        dat = (scaleTransform @ self.get_data_homogeneous().T).T
+        dat = np.delete(dat, -1, axis = 1)
+        self.data = data.Data(data = dat, headers = self.data.get_headers())
+        return dat
         # '''Scales the variables `headers` in projected dataset in corresponding amounts specified
         # by `magnitudes`.
 
@@ -273,11 +284,16 @@ class Transformation(analysis.Analysis):
 
     def scatter_color(self, ind_var, dep_var, c_var, title=None):
         color_map = palettable.colorbrewer.sequential.Purples_9
-        x = self.data.select_data(ind_var)
-        y = self.data.select_data(dep_var)
-        z = self.data.select_data(c_var)
+        x = self.orig_dataset.select_data(ind_var)
+        y = self.orig_dataset.select_data(dep_var)
+        z = self.orig_dataset.select_data(c_var)
+        #print(self.data.get_all_data())
+        #print(x)
         plt.scatter(x, y, c=z, s=75, cmap=color_map.mpl_colormap, edgecolor='black')
         plt.title(title)
+        plt.xlabel(ind_var)
+        plt.ylabel(dep_var)
+        plt.colorbar(label = c_var)
         '''Creates a 2D scatter plot with a colo)r scale representing the 3rd dimension.
 
         Parameters:

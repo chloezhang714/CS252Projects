@@ -129,7 +129,7 @@ class Analysis:
     def var(self, headers, rows=[]):
         data = self.data.select_data(headers,rows)
         # print(data.shape)
-        # print(self.mean(headers,rows).shape)
+        # print(self.mean(headers,rows).shape)d
         diff = data-self.mean(headers,rows)
         # print(diff)
         sqr = diff * diff
@@ -188,12 +188,12 @@ class Analysis:
         plt.show()
 
     def scatter(self, ind_var, dep_var, title = ''):
-        x = self.data.select_data([ind_var])
-        y = self.data.select_data([dep_var])
+        x = self.data.select_data(ind_var)
+        y = self.data.select_data(dep_var)
         plt.scatter(x,y)
         plt.title(title)
-        plt.xlabel(ind_var)
-        plt.ylabel(dep_var)
+        plt.xlabel([ind_var])
+        plt.ylabel([dep_var])
         return x,y
         # '''Creates a simple scatter plot with "x" variable in the dataset `ind_var` and
         # "y" variable in the dataset `dep_var`. Both `ind_var` and `dep_var` should be strings
@@ -221,7 +221,7 @@ class Analysis:
 
     def pair_plot(self, data_vars, fig_sz=(12, 12), title = 'Pair Plot'):
         dim = len(data_vars)
-        fig, axs = plt.subplots(dim,dim, figsize=fig_sz, sharex='none')
+        fig, axs = plt.subplots(dim,dim, figsize=fig_sz)
         for i in range(dim):
             for j in range(dim):
                     if j == 0:
@@ -230,9 +230,12 @@ class Analysis:
                         axs[i, j].set(xlabel=data_vars[j])
                     x = self.data.select_data([data_vars[i]])
                     y = self.data.select_data([data_vars[j]])
+                    # print(data_vars[j])
+                    # print(data_vars[i])
+                    # print(x.size)
+                    # print('y')
+                    # print(y.size)
                     axs[i, j].scatter(x,y)
-                    axs[i, j].set_xticks([])
-                    axs[i, j].set_yticks([])
         fig.subplots_adjust(hspace = 0.5, wspace = 0.3)
         fig.suptitle(title)
         return (fig,axs)

@@ -13,12 +13,11 @@ class Data:
         self.filepath = filepath
         self.headers = headers
         self.data = data
-        self.header2l = header2col
+        self.header2col = header2col
         if filepath != None: 
             self.read(filepath)
-        else: 
-            print("Filepath invalid")
-        pass
+        else:
+            self.fill_h2c()
         # Data object constructor
 
         # Parameters:
@@ -46,7 +45,12 @@ class Data:
         # - If `filepath` isn't None, call the `read` method.
         
         pass
-
+    def fill_h2c(self):
+        self.header2col = {}
+        for i, j in enumerate(self.headers):
+            j = j.strip()
+            self.header2col[j] = i  
+    
     def read(self, filepath):
         self.filepath = filepath
         with open(filepath, newline='') as csvfile:
@@ -61,10 +65,7 @@ class Data:
                 # print(i)
                 # print("#" + j + "#")
                 if j == 'numeric':
-                    self.headers.append(headers_t[i])      
-            for i, j in enumerate(self.headers):
-                j = j.strip()
-                self.header2col[j] = i  
+                    self.headers.append(headers_t[i])       
             # print(self.headers)
             # print(self.header2col)
             # print('headers header2col success')
@@ -78,7 +79,9 @@ class Data:
                     except:
                         pass
                 self.data.append(ro)
-                
+        for i, j in enumerate(self.headers):
+            j = j.strip()
+            self.header2col[j] = i      
         self.data = np.array(self.data)
         #print(self.data)
         #enumerate
